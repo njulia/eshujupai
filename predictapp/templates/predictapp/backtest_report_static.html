@@ -1,0 +1,71 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_title %}{% trans "Backtest report" %}{% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-4">
+    <div id="previewImage"></div>
+</div>
+
+<div class="col-sm-4 text-left">
+    <h3>{% now "Y年m月d日" %}，{{ index }}股票分析</h3>
+<!--    <p>纽约华尔街，伦敦金融城，Tier 1投行，我们希望撕掉标签，用数据说话。</p>-->
+    <p>我们有超过50年的中国和美国股市、ETF、基金、期货数据，如果您希望交流想法，欢迎与我们联系，我们将为您<b>免费</b>开发并测试。</p>
+<!--    <p>我们希望能一如既往的免费提供分析报告。您的1分钱捐助，可以让我们为您提供服务多一天。</p>-->
+
+    <div>
+        <h4>一、整体分析</h4>
+        <p>我们随机选取了{{ index }}的股票，利用统计分析、技术指标和人工智能，对其进行了预测回测。</p>
+        <p>下表中列出了最近{{ backtest_set }}个交易日的分析结果。</p>
+<!--        <p>下表中列出了最近{{ backtest_set }}个交易日回测收益率排名前{{ n }}的股票。</p>-->
+        {% for table in tables %}
+            {% with 'images/'|add:table as imagePath %}
+            <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+    <div>
+        <h4>二、个例分析</h4>
+        {% for key, value in results.items %}
+            <h5>{{ forloop.counter }}.{{ key }}</h5>
+            <p>表{{ forloop.counter }}. 股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}回测收益前{{ strategy_rank }}的策略</p>
+            {% for table in value.tables %}
+                {% with 'images/'|add:table as imagePath %}
+                <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+                {% endwith %}
+            {% endfor %}
+
+            {% with 'images/'|add:value.return_chart as imagePath %}
+                <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+                {% endwith %}
+            <p>图{{ forloop.counter }}. 股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}回测结果</p>
+            <p>表{{ forloop.counter }}和图{{ forloop.counter }}为e数据派对股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}的历史数据进行回测的结果。
+               表{{ forloop.counter }}列出了回测周期内收益率前{{ strategy_rank }}名的策略，并给出了供参考的交易方向，挂单价，止盈位和止损位。
+               图{{ forloop.counter }}为对应表{{ forloop.counter }}中回测结果的图形显示，其中第一张图为收益曲线，第二张图为蜡烛图。</p>
+
+        {% endfor %}
+    </div>
+
+    <!--<div>-->
+        <!--<h4>*更多分析*</h4>-->
+        <!--<p>关于更多股票的回测预测，请访问www.eshujupai.com。您也可以上传自己的历史数据进行回测预测分析。</p>-->
+    <!--</div>-->
+
+    <h5>本文信息仅供参考，不承担实际交易后果。实际交易需您独立决策。</h5>
+</div>
+
+<div class="col-sm-4"></div>
+
+{% endblock %}
+

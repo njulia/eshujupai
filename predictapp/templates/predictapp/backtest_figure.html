@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Backtest figure" %}{% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid text-center">
+
+    <p><b>{% trans "Return" %}</b></p>
+    {{ return_chart.as_html }}
+
+    <p><b>{% trans "Price" %}</b></p>
+    {{ price_chart.as_html }}
+</div>
+{% endblock %}

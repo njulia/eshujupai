@@ -1,0 +1,71 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="container-fluid text-left">
+    <p>{% trans "Your Task is" %} <span id="user-count"></span>!</p>
+    <div class="status">
+        {% if task_id %}
+        <div class="progress">
+            <div class="bar"></div>
+        </div>
+        {% endif %}
+    </div>
+    <p><a id="backtestTable" style="visibility:hidden;" href="{% url 'backtest_table' %}">{% trans "Show Backtest Result" %}</a></p>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script type="text/javascript">
+   document.getElementById("user-count").textContent="STARTING";
+   var poll_xhr;
+   var willstop = 0;
+  (function(){
+    var poll = function(){
+      var state = "{{state}}"
+      var json_dump = "{{data}}";
+      var task_id = "{{task_id}}";
+      poll_xhr = $.ajax({
+        url:'poll_state',
+        type: 'POST',
+        data: {
+            task_id: task_id,
+            csrfmiddlewaretoken: "{{csrf_token}}",
+        },
+        success: function(result) {
+                    if (result.state == "SUCCESS")
+                    {
+                        console.log("Stop because success");
+                        willstop = 1;
+                        jQuery('.bar').css({'width': 100 + '%'});
+                        jQuery('.bar').html(100 + '%');
+                        document.getElementById('backtestTable').style.visibility = 'visible';
+                        document.getElementById("user-count").textContent="DONE";
+
+                    }
+                    else if (result.state == "FAILURE")
+                    {
+                        willstop = 1;
+                        document.getElementById("user-count").textContent="FAILED";
+                    }
+                    else if (result.data != null && result.data.process_percent != null)
+                    {
+                        jQuery('.bar').css({'width': result.data.process_percent + '%'});
+                        jQuery('.bar').html(result.data.process_percent + '%');
+                        document.getElementById("user-count").textContent="PROCRESSING";
+                    };
+        }
+      });
+    };
+    var refreshIntervalId = setInterval(function() {
+      console.log("poll");
+      console.log(willstop);
+      poll();
+      if(willstop == 1){
+        console.log("willstop=1");
+        clearInterval(refreshIntervalId);
+      }
+    }, 1000);
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="container-fluid text-center">
+    <br>
+    <p>{%trans 'Membership for 30 days: 49.99 CNY.' %}</p>
+    <p>{%trans 'We will process your payment as soon as possible. It may take 1 working day. Your membership will be activated after verification.' %}</p>
+    <p><b>{%trans 'Please add your usename of this website to the note of payment. Otherwise we cannot link your account with the payment.' %}</b></p>
+    <br>
+
+    <div class="row-fluid">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            {% load static %}
+            <img src="{% static 'alipay/alipay_prod.jpg' %}" alt="支付宝" height="300"/>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>

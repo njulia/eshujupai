@@ -1,0 +1,31 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Backtest result" %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid text-center">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+        <p><a href="{% url 'backtest_figure' %}" target="_blank">{% trans "Show Backtest Figures" %}</a></p>
+
+        <p>{% blocktrans with start=start_time|date:'Y-m-d' end=end_time|date:'Y-m-d' %}
+            Backtest results for {{ ticker }}. Backtest range: {{ start }} - {{ end}}
+            {% endblocktrans %}</p>
+        <div class="tbl_container_numbers">
+            {% if user.is_authenticated %}
+                {% autoescape off %}
+                {{ result }}
+                {% endautoescape %}
+            {% else %}
+                <p><b>{% trans "Please login" %}</b></p>
+                {% autoescape off %}
+                {{ result }}
+                {% endautoescape %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+{% endblock %}

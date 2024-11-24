@@ -1,0 +1,86 @@
+<div class="col-sm-1"></div>
+<div class="col-sm-10 text-left">
+    <p>
+        <b>The information of our website is only for reference. We will not be liable for any loss or damage of any nature.
+            If you use our website, it means you agree to the</b>
+        <a href="{% url 'terms_service' %}" target="_blank">Terms of service</a>
+        <!--<b>and</b>-->
+        <!--<a href="{% url 'privacy_policy' %}" target="_blank">Privacy policy</a>-->
+        <b>. If you do not agree to the terms and conditions, you must stop using our website.</b>
+    </p>
+    <div class="well">
+        <ul>
+        <li>The system uses daily historical data for backtest and predication. The strategies cover technical indicators, statistical analysis, AI.</li>
+        <li>The system doesn't apply to intra-day trading. Normally, the positions are held more than 1 day only if the stop loss or take profit price has been triggered.</li>
+        <li>Assumptions:</li>
+            <ul>
+                <li>The system process the historical data, and predict the trading plan for next day: buy/sell/no operation,
+                    limit order, take profit and stop loss.</li>
+                <li>If the predicted signal is 1, hold the position if you have long position,
+                    close the position and then buy if have short position, buy if no position.</li>
+                <li>If the predicted signal is -1, hold the position if you have short position,
+                    close the position and then short if have long position, sell if no position.</li>
+                <li>The order is placed with the predicted limit price, take profit and stop loss before the market opens.
+                    Assume no slippage and no market impact.</li>
+            </ul>
+        </ul>
+    </div>
+    <div class="well">
+        <p><b>Features</b></p>
+        <ul>
+        <li>Click <a href="{% url 'upload' %}">Backtest & Predict</a>, enter the webpage of inputing backtest parameters: Ticker, Commission, Historical data (Option).
+            <ul>
+            <li>If you didn't upload historical data, the historical data will be got from our feed. By default, 52 weeks' data will be used for backtest and prediction.
+                The data for the current day is available after 21:00. The feed covers 3,500+ Chinese stocks, 60,000+ US Stocks & ADRs, Mutual Funds and ETFs.
+            </li>
+            <li>If you uploaded historical data, the uploaded historical data will be used for backtest and prediction.
+                The uploaded file must be in csv format, and it should include the following information:
+                date, open, close, high, low, volume. The sequence of columns doesn't matter.
+                <!--<a herf="file:///home/julia/trading_analysis/web/documents/AAPL_sample.csv">样本文件</a>-->
+                <table>
+                <tr>
+                    <th>date</th>
+                    <th>open</th>
+                    <th>close</th>
+                    <th>high</th>
+                    <th>low</th>
+                    <th>volume</th>
+                </tr>
+                <tr>
+                    <td>2018-01-02</td>
+                    <td>170.16</td>
+                    <td>172.26</td>
+                    <td>172.3</td>
+                    <td>169.26</td>
+                    <td>25048048</td>
+                </tr>
+                <tr>
+                    <td>2018-01-03</td>
+                    <td>172.53</td>
+                    <td>172.23</td>
+                    <td>174.55</td>
+                    <td>171.96</td>
+                    <td>28819653</td>
+                </tr>
+                </table>
+            </li>
+            </ul>
+        </li>
+        <li>Backtest and prediction may take several minutes, which depends on the amount of historical data.
+            <ul>
+                <li>If you haven't signed in or your membership is not activated, the strategies of 10 smallest daily return will be shown.</li>
+                <li>If you have signed in and your membership is activated, the strategies of 20 largest daily return will be shown.</li>
+            </ul>
+        </li>
+        <li>After signed in, clicking <a href="{% url 'payment' %}">Payment</a> will enter the webpage for payment.
+            You can select one of the following methods:
+            <ul>
+            <li>Pay with Card</li>
+            <li>Alipay</li>
+            <li>WeChat Pay</li>
+            </ul>
+        </li>
+        </ul>
+    </div>
+</div>
+<div class="col-sm-1"></div>

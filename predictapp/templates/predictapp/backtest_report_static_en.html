@@ -1,0 +1,64 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_title %}{% trans "Backtest report" %}{% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-4">
+    <div id="previewImage"></div>
+</div>
+
+<div class="col-sm-4 text-left">
+    <h3>{% now "m/d/Y" %}, {{ index }} Analysis</h3>
+    <div>
+        <h4>I. Introduction</h4>
+        <p>We have randomly selected the stocks of {{ index }}, and backtested using strategies of statistics, technical indicators and AI.</p>
+        <p>The following table shows the analysis result of last {{ backtest_set }} trading days.</p>
+        {% for table in tables %}
+            {% with 'images/'|add:table as imagePath %}
+            <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+    <div>
+        <h4>II. Analysis</h4>
+        {% for key, value in results.items %}
+            <h5>{{ forloop.counter }}.{{ key }}</h5>
+            <p>Table {{ forloop.counter }}. Top {{ strategy_rank }} strategies of backtest from{{ value.start_time|date:'m/d/Y' }} to {{ value.end_time|date:'m/d/Y' }}</p>
+            {% for table in value.tables %}
+                {% with 'images/'|add:table as imagePath %}
+                <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+                {% endwith %}
+            {% endfor %}
+
+            {% with 'images/'|add:value.return_chart as imagePath %}
+                <img src='{% static imagePath %}' align="middle" style="width:600px;"/>
+                {% endwith %}
+            <p>Figure {{ forloop.counter }}. Backtest result of stock {{ key }} from {{ value.start_time|date:'m/d/Y' }} to {{ value.end_time|date:'m/d/Y' }}</p>
+            <p>Table {{ forloop.counter }} and figure {{ forloop.counter }} are the analysis results of {{ key }} within backtest range from {{ value.start_time|date:'m/d/Y' }} to {{ value.end_time|date:'m/d/Y' }}.
+               Table {{ forloop.counter }} lists the top {{ strategy_rank }} strategies of backtest with {{ backtest_set }} trading days, and predicted trading suggestion.
+               Figure {{ forloop.counter }} is the graphical backtest result. The top figure is the return curve, and the bottom figure is the candlestick.</p>
+        {% endfor %}
+    </div>
+
+    <!--<div>-->
+        <!--<h4>*更多分析*</h4>-->
+        <!--<p>关于更多股票的回测预测，请访问www.eshujupai.com。您也可以上传自己的历史数据进行回测预测分析。</p>-->
+    <!--</div>-->
+
+    <h5>The information is only for reference. We will not be liable for any loss or damage of any nature.</h5>
+</div>
+
+<div class="col-sm-4"></div>
+
+{% endblock %}

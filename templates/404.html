@@ -1,0 +1,13 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+<div class="row">
+    <h2>
+        {% blocktrans %}{{ error }}{% endblocktrans %}
+    </h2>
+</div>
+
+{% endblock %}

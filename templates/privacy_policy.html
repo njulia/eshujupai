@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    {% if LANGUAGE_CODE == "zh-cn" %}
+        {% include 'privacy_policy_cn.html' %}
+    {% else %}
+        {% include 'privacy_policy_us.html' %}
+    {% endif %}
+{% endblock %}
+
+    <!--/* Multi levels list */-->
+    <!--olm {-->
+      <!--counter-reset: section;-->
+      <!--list-style-type: none;-->
+    <!--}-->
+    <!--lim:before {-->
+      <!--counter-increment: section;-->
+      <!--content: counters(section, ".") ". " counters(section, ".") " ";-->
+    <!--}-->
+
+    <!--OL { counter-reset: item }-->
+    <!--LI { display: block }-->
+    <!--LI:before { content: counters(item, ".") ". "; counter-increment: item }-->

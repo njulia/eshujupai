@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    {% if LANGUAGE_CODE == "zh-cn" %}
+        {% load static %}
+        <!--<a href="{% static 'terms/terms_of_service_us.pdf' %}" download="服务协议.pdf" target="_self">服务协议</a>-->
+        {% include 'terms_service_us.html' %}
+    {% else %}
+        {% include 'terms_service_us.html' %}
+    {% endif %}
+{% endblock %}

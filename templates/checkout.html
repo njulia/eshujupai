@@ -1,0 +1,69 @@
+{% load i18n %}
+
+<p><b>{%trans 'Membership for 30 days: $7.99 (discount price)' %}</b></p>
+
+<div class="col-sm-12">
+<div class="col-sm-4"></div>
+<div class="col-sm-4">
+    <div class="well">
+        <p>{%trans 'Activate instantly' %}</p>
+        {% if LANGUAGE_CODE == "zh-cn" %}
+        <form action="stripe_checkout" method="POST">
+            {% csrf_token %}
+            <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ stripe_public_key }}"
+            data-amount="4999"
+            data-name="数据派"
+            data-description="30天费用"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto"
+            data-currency="CNY"
+            data-panel-label="支付"
+            data-label="用卡支付"
+            data-zip-code="false"
+            data-billing-address="false">
+            </script>
+        </form>
+        {% else %}
+        <form action="stripe_checkout" method="POST">
+            {% csrf_token %}
+            <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ stripe_public_key }}"
+            data-amount="799"
+            data-name="eShuJuPai"
+            data-description="Membership for 30 days"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto"
+            data-currency="USD"
+            data-panel-label=""
+            data-label="Pay with Card"
+            data-zip-code="false"
+            data-billing-address="false">
+            </script>
+        </form>
+        {% endif %}
+    </div>
+    <div class="well">
+        <p>{%trans 'Activate after verification' %}</p>
+
+        <!--<form action='alipay_checkout' method="POST">-->
+            <!--{% csrf_token %}-->
+            <!--<button type="submit">{%trans 'Alipay' %}</button>-->
+        <!--</form>-->
+        <form action='zhifubao_checkout' method="POST">
+            {% csrf_token %}
+            <button type="submit">{%trans 'Alipay' %}</button>
+        </form>
+        <br>
+        <form action='wechat_checkout' method="POST">
+            {% csrf_token %}
+            <button type="submit">{%trans 'WeChat Pay' %}</button>
+        </form>
+
+    </div>
+</div>
+
+<div class="col-sm-4"></div>
+</div>

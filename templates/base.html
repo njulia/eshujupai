@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+{% load i18n %}
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137229610-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-137229610-1');
+  </script>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2663895511420773",
+    enable_page_level_ads: true
+  });
+  </script>
+  <meta name="baidu-site-verification" content="iTS5YVVzeb" />
+  <title>
+      {% block head_title %}
+      eShuJuPai
+      {% endblock %}
+  </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="baidu-site-verification" content="lTV4H7a3qo" />
+  <meta name="msvalidate.01" content="61BB7DC2DCBD3796569917132D2C38C5" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #000000;
+    }
+
+    html {
+    position: relative;
+    min-height: 100%;
+    }
+
+    /* Set the bottom to the height of the footer */
+    body {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #dddddd;
+      color: black;
+      padding: 20px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 50px;
+      width: 100%;
+      overflow: hidden;
+    }
+    button {
+      padding:6px 20px;
+      background: #34A0EE;
+      color: #ffffff;
+      border:0 none;
+      cursor:pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      font-weight: bold;
+      box-shadow: 0 1px 0 #9cb8d8;
+      width: 128px;
+    }
+
+    /* Table style */
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 1px;
+    }
+    .progress {
+      width:50%;
+      background:white;
+    }
+    .bar {
+      height:20px;
+      width:0%;
+      background:#dddddd;
+      text-align:right;
+    }
+  </style>
+  {% block extra_head %}
+  {% endblock %}
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <!--<a class="navbar-brand" href="{% url 'home' %}">eShuJuPai</a>-->
+        <a class="navbar-brand" href="{% url 'home' %}">
+        {% load static %}
+        <img src="{% static 'logo.png' %}" alt="eShuJuPai" height="25"/>
+        </a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'upload' %}">{% trans "Backtest & Predict" %}</a></li>
+        <li><a href="{% url 'instruction' %}" target="_blank">{% trans "Instruction" %}</a></li>
+        <li><a href="{% url 'contact' %}" target="_blank">{% trans "Contact" %}</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'payment' %}" target="_blank">{% trans "Payment" %}</a></li>
+        {% endif %}
+        <li><a href="{% url 'reports' %}" target="_blank">{% trans "Reports" %}</a></li>
+        <li><a href="{% url 'trading' %}" target="_blank">{% trans "Trading" %}</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav">
+              {% if user.is_authenticated %}
+              <li><a href="{% url 'account_email' %}">{% trans "Change E-mail" %}</a></li>
+              <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>
+              {% else %}
+              <li><a href="{% url 'account_login' %}"><span class="glyphicon glyphicon-log-in"></span>{% trans " Sign In" %}</a></li>
+              <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
+              {% endif %}
+          </ul>
+          <ul class="nav navbar-nav">
+              <li>{% include 'lang.html' %}</li>
+          </ul>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% if messages %}
+<div class="row-fluid">
+    <div class="col-sm-9"></div>
+    <div class="col-sm-3">
+        <strong>{% trans "Messages:" %}</strong>
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<br><br>
+<!--<div class="panel panel-default">-->
+<!--<div class="panel-body">-->
+  <div class="container-fluid text-center">
+    <div class="col-sm-12">
+      <div class="row-fluid">{% block content %}{% endblock %}</div>
+      <div class="row-fluid">{% block extra_body %}{% endblock %}</div>
+    </div>
+  </div>
+<!--</div>-->
+<!--</div>-->
+
+
+<footer class="container-fluid text-center">
+    <!--<iframe src="https://rcm-cn.amazon-adsystem.com/e/cm?o=28&p=283&l=ur1&category=apparel&banner=0MAK1FXDGGH5HRV1Y282&f=ifr&linkID=442c9dc3837922d50f4e34101c896b0f&t=eshujupai-23&tracking_id=eshujupai-23" width="650" height="45" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>-->
+    <p>{% trans " © 2018 eShuJuPai " %}</p>
+</footer>
+
+</body>
+</html>
+
+

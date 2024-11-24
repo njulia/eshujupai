@@ -1,0 +1,24 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="container-fluid text-left">
+  <div class="row text-center">
+    <p>{% trans "The backtest may take a few minutes, please don't close this window." %}</p>
+  </div>
+<div class="col-sm-4"></div>
+<div class="col-sm-4">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Run" %}</button>
+  </form>
+
+  <!--<br>-->
+  <!--Running progress:-->
+  <!--<progress value="0" max="100"></progress>-->
+</div>
+<div class="col-sm-4"></div>
+</div>
+{% endblock %}

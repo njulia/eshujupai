@@ -1,0 +1,20 @@
+{% load i18n %}
+        <script  type="text/javascript">
+              function selectlang(obj) {
+                       str="/i18n/setlang/";
+                       myform = document.getElementById('langform');
+                       myform.method = "POST";
+                       myform.action = str;
+                       myform.submit();
+               }
+       </script>
+
+       <form name="langform" id="langform" method='post'>
+           {% csrf_token %}
+           <select id="language" name="language" onchange="selectlang(this)">
+               <option value="1" >{% trans "Languages" %}</option>
+               {% for lang in LANGUAGES %}
+               <option value="{{ lang.0 }}" > {{ lang.1 }}</option>
+               {% endfor %}
+           </select>
+        </form>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+        <p><b>{% blocktrans %}If you have any inquiries or suggestions, please contact us{% endblocktrans %}</b></p>
+        <a href="mailto:contact@eshujupai.com?Subject=Hello" target="_top">Email: contact@eshjupai.com</a>
+        <p>{% trans "WeChat: eshujupai" %}</p>
+        <p>{% trans "WeChat Subscription Account: e数据派" %}</p>
+            {% load static %}
+            <img src="{% static 'wechat/account.jpg' %}" alt="微信号" height="300"/>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+<style>
+  #progress-bar {
+  margin-top: 1em;
+}
+ </style>
+<body>
+
+<div class='progress-wrapper'>
+  <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+</div>
+<div id="progress-bar-message">Waiting for progress to start...</div>
+
+<script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+<script type="text/javascript">
+   function updateProgress(progressBarElement, progressBarMessageElement, progress) {
+  progressBarElement.style.width = progress.percent + "%";
+  progressBarMessageElement.innerHTML = progress.current + ' of ' + progress.total + ' processed.';
+}
+
+var trigger = document.getElementById('progress-bar-trigger');
+trigger.addEventListener('click', function(e) {
+  var bar = document.getElementById("progress-bar");
+  var barMessage = document.getElementById("progress-bar-message");
+  for (var i = 0; i < 11; i++) {
+    setTimeout(updateProgress, 500 * i, bar, barMessage, {
+      percent: 10 * i,
+      current: 10 * i,
+      total: 100
+    })
+  }
+})
+</script>
+</body>

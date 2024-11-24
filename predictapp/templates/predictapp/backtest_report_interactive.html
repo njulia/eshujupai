@@ -1,0 +1,107 @@
+{% extends 'predictapp/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_title %}{% trans "Backtest interactive report " %}{% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-4">
+    <div id="previewImage"></div>
+</div>
+
+<div class="col-sm-4 text-left">
+    <h3>{% now "Y年m月d日" %}，数据说-{{ index }}</h3>
+    <div id="html-content-holder" style="background-color: #ffffff; color: #000000; width: 600px; padding-left: 1px; padding-top: 1px; padding-bottom: 60px">
+    <div>
+        <h4>一、整体分析</h4>
+        <p>e数据派（微信公众号：e数据派）基于技术指标，以历史数据为依据，智能分析为工具，利用www.eshujupai.com系统对第二天的交易行为（买/卖，止盈位，止损位）进行预测。</p>
+        {% if topn %}
+            <p>选取了{{ index }}的股票，利用历史数据对超过60种交易策略进行预测回测。</p>
+        <p>下表中列出了最近{{ backtest_set }}个交易日回测收益率排名前{{ n }}的股票。</p>
+        <table style="width:100%">
+            <tr>
+                <th>股票代码</th><th>公司</th><th>开盘价</th><th>收盘价</th><th>总收益</th><th>收益率(%)</th>
+            </tr>
+            {% for row in topn %}
+            <tr>
+                {% for s in row %}
+                <td>{{ s }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
+    <div>
+        <h4>二、个例分析</h4>
+        {% for key, value in results.items %}
+            <h5>{{ forloop.counter }}.{{ key }}</h5>
+            <p>表{{ forloop.counter }}. 股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}回测收益前{{ strategy_rank }}的策略（来源：www.eshujupai.com）</p>
+
+            <div class="tbl_container_numbers">
+                {% autoescape off %}
+                {{ value.backtest_summary }}
+                {% endautoescape %}
+            </div>
+            <div class="container-fluid text-center">
+                <p><b>收益</b></p>
+                      {{ value.return_chart.as_html }}
+                <p><b>价格</b></p>
+                      {{ value.price_chart.as_html }}
+            </div>
+
+            <p>图{{ forloop.counter }}. 股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}回测结果（来源：www.eshujupai.com）</p>
+            <p>表{{ forloop.counter }}和图{{ forloop.counter }}为e数据派对股票{{ key }}从{{ value.start_time|date:'Y年m月d日' }}到{{ value.end_time|date:'Y年m月d日' }}的历史数据进行回测的结果。
+               表{{ forloop.counter }}列出了最近{{ backtest_set }}个交易日回测收益前{{ strategy_rank }}名的策略，并给出了下一个交易日的交易方向，挂单价，止盈位和止损位。
+               图{{ forloop.counter }}为对应表{{ forloop.counter }}中回测结果的图形显示，其中第一张图为收益曲线，第二张图为日线蜡烛图。</p>
+
+        {% endfor %}
+    </div>
+
+    <!--<div>-->
+        <!--<h4>*更多分析*</h4>-->
+        <!--<p>关于更多股票的回测预测，请访问www.eshujupai.com。您也可以上传自己的历史数据进行回测预测分析。</p>-->
+    <!--</div>-->
+
+    <h5>本文信息仅供参考，不承担实际交易后果。实际交易需您独立决策。</h5>
+    </div>
+</div>
+
+<div class="col-sm-4">
+    <input id="btn-Preview-Image" type="button" value="Preview" />
+    <a id="btn-Convert-Html2Image" herf="#">Download</a>
+</div>
+
+<script>
+$(document).ready(function(){
+var element = $("#html-content-holder"); // global variable
+var getCanvas; // global variable
+
+    $("#btn-Preview-Image").on('click', function () {
+         html2canvas(element, {
+         onrendered: function (canvas) {
+                $("#previewImage").append(canvas);
+                getCanvas = canvas;
+             }
+         });
+    });
+
+	$("#btn-Convert-Html2Image").on('click', function () {
+    var imgageData = getCanvas.toDataURL("image/png");
+    // Now browser starts downloading it instead of just showing it
+    var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+    $("#btn-Convert-Html2Image").attr("download", "eshujupai.png").attr("href", newData);
+	});
+});
+</script>
+{% endblock %}
+
