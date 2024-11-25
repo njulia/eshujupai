@@ -5,7 +5,7 @@ from predictapp.models_operation import (
     get_userpayment,
     set_userpayment
 )
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 from .views import get_saved_result, format_backtest_summary
 from urllib.parse import parse_qs
 import stripe

@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart, CandlestickChart
 from celery.result import AsyncResult
@@ -31,7 +31,7 @@ from predictapp.forms import (
     UploadForm,
 )
 from predictapp.tasks import get_backtest_task
-from gateway import ib
+# from gateway import ib
 
 
 log = logging.getLogger(__name__)
@@ -332,68 +332,68 @@ def poll_state(request):
     return HttpResponse(json_data, content_type='application/json')
 
 
-def trading(request):
-    try:
-        if request.method == 'POST':
-            form = UploadForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                ticker = form.cleaned_data['ticker']
-                commission = form.cleaned_data['commission']
-                uploaded_file = form.cleaned_data['document']
-                uploaded_file_path = form.instance.document.path if uploaded_file else ''
-
-                # todo: delete this for block, it is for paper account
-                app = ib.IBApp()
-                with app.connect("127.0.0.1", 7497, clientId=0) as conn:
-                # wait_connect = 100
-                # while wait_connect > 0:
-                #     if app.isConnected():
-                #         break
-                #     t=random.gauss()
-                #     time.sleep(random.gauss())
-                #     print(f'addd-sleep {t} secs')
-
-                    app.cancel_position(tickers='all') # cancel all positions before placing new orders
-                    for ticker in ['us30',]:
-                    #for ticker in ['ARWR', 'PDD', 'JD', 'ZM']:
-                            # ('gold', 'us30', 'us10', 'us5'):
-                        delete_backtest(tickers=[ticker])
-                        backtest_summary, backtest_detail, start_time, end_time = get_backtest(
-                            ticker, commission=0, period='D',
-                            #file=file_path,
-                        )
-                        best_strategy = backtest_summary.nlargest(1, ['return_rate'], keep='first').to_dict(orient='records')[0]
-                        print(f'addd-best strateggy of {ticker}: {best_strategy}')
-
-                        backtest_summary_show = format_backtest_summary(request, backtest_summary)
-                        request.session['ticker'] = ticker
-                        request.session['start_time'] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
-                        request.session['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
-                        context = {'result': backtest_summary_show.to_html(index=False, na_rep=''),
-                                   'ticker': ticker,
-                                   'start_time': start_time,
-                                   'end_time': end_time,
-                                   }
-
-                        #backtest_summary.to_csv(f'/Users/jingnie/startup/eshujupai-reports/{ticker}_{end_time.date()}.csv')
-                        html_string = render_to_string('predictapp/backtest_private.html', context)
-                        with open(f'/Users/jingnie/startup/eshujupai-reports/backtest/{end_time.date()}_{ticker}.html', 'w') as html_file:
-                            html_file.write(html_string)
-
-                        app.update_and_new(ticker=ticker, action=best_strategy['predict_signal'], qty=100,
-                                           limit_price=best_strategy['limit_price'],
-                                           take_profit=best_strategy['predict_take_profit'],
-                                           stop_loss=best_strategy['predict_stop_loss'],
-                                          )
-                # app.disconnect()
-                return render(request, 'predictapp/backtest_private.html', context)
-                # todo: delete this for block, it is for paper account --- end
-        else:
-            form = UploadForm()
-        return render(request, 'predictapp/upload_historical_data.html',
-                      {'form': form})
-    except:
-        log.error(traceback.print_exc())
-        return render(request, '404.html',
-                      {'error': _('Failed to run the backtest. Please upload the file with historical data.')})
+# def trading(request):
+#     try:
+#         if request.method == 'POST':
+#             form = UploadForm(request.POST, request.FILES)
+#             if form.is_valid():
+#                 form.save()
+#                 ticker = form.cleaned_data['ticker']
+#                 commission = form.cleaned_data['commission']
+#                 uploaded_file = form.cleaned_data['document']
+#                 uploaded_file_path = form.instance.document.path if uploaded_file else ''
+#
+#                 # todo: delete this for block, it is for paper account
+#                 app = ib.IBApp()
+#                 with app.connect("127.0.0.1", 7497, clientId=0) as conn:
+#                 # wait_connect = 100
+#                 # while wait_connect > 0:
+#                 #     if app.isConnected():
+#                 #         break
+#                 #     t=random.gauss()
+#                 #     time.sleep(random.gauss())
+#                 #     print(f'addd-sleep {t} secs')
+#
+#                     app.cancel_position(tickers='all') # cancel all positions before placing new orders
+#                     for ticker in ['us30',]:
+#                     #for ticker in ['ARWR', 'PDD', 'JD', 'ZM']:
+#                             # ('gold', 'us30', 'us10', 'us5'):
+#                         delete_backtest(tickers=[ticker])
+#                         backtest_summary, backtest_detail, start_time, end_time = get_backtest(
+#                             ticker, commission=0, period='D',
+#                             #file=file_path,
+#                         )
+#                         best_strategy = backtest_summary.nlargest(1, ['return_rate'], keep='first').to_dict(orient='records')[0]
+#                         print(f'addd-best strateggy of {ticker}: {best_strategy}')
+#
+#                         backtest_summary_show = format_backtest_summary(request, backtest_summary)
+#                         request.session['ticker'] = ticker
+#                         request.session['start_time'] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
+#                         request.session['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
+#                         context = {'result': backtest_summary_show.to_html(index=False, na_rep=''),
+#                                    'ticker': ticker,
+#                                    'start_time': start_time,
+#                                    'end_time': end_time,
+#                                    }
+#
+#                         #backtest_summary.to_csv(f'/Users/jingnie/startup/eshujupai-reports/{ticker}_{end_time.date()}.csv')
+#                         html_string = render_to_string('predictapp/backtest_private.html', context)
+#                         with open(f'/Users/jingnie/startup/eshujupai-reports/backtest/{end_time.date()}_{ticker}.html', 'w') as html_file:
+#                             html_file.write(html_string)
+#
+#                         app.update_and_new(ticker=ticker, action=best_strategy['predict_signal'], qty=100,
+#                                            limit_price=best_strategy['limit_price'],
+#                                            take_profit=best_strategy['predict_take_profit'],
+#                                            stop_loss=best_strategy['predict_stop_loss'],
+#                                           )
+#                 # app.disconnect()
+#                 return render(request, 'predictapp/backtest_private.html', context)
+#                 # todo: delete this for block, it is for paper account --- end
+#         else:
+#             form = UploadForm()
+#         return render(request, 'predictapp/upload_historical_data.html',
+#                       {'form': form})
+#     except:
+#         log.error(traceback.print_exc())
+#         return render(request, '404.html',
+#                       {'error': _('Failed to run the backtest. Please upload the file with historical data.')})

@@ -7,7 +7,7 @@ from tiingo import TiingoClient
 from datetime import date, timedelta, datetime
 from predict.process import preprocess, backtest, get_return
 from predict.technical_indicators import cal_technical_indicators
-from predict.ml.ml_indicator import cal_ml_indicators
+# from predict.ml.ml_indicator import cal_ml_indicators
 from predict.settings import BACKTEST_SET, FEED_DAYS
 from web.settings import TIINGO_API_KEY, BASE_DIR
 import os
@@ -167,8 +167,8 @@ def run(df, commission, ticker='', backtest_set=BACKTEST_SET):
     # Calculate the technical indicators
     cal_technical_indicators(df)
 
-    # Calculate machine learning indicators
-    cal_ml_indicators(df)
+    # # Calculate machine learning indicators
+    # cal_ml_indicators(df)
 
     # Backtest with all signals and save the daily pnl in a DataFrame.
     indicators, indicator_columns = get_indicators(df)

@@ -28,7 +28,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('terms_service/', views.terms_service, name='terms_service'),
     path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
-    path('trading/', views.trading, name='trading')
+    # path('trading/', views.trading, name='trading')
 
     # path('ads/', include('ads.urls')),
 

@@ -1,5 +1,7 @@
 from celery import current_task, Task
-from celery.decorators import periodic_task, task
+from web.celery import app
+from celery.schedules import crontab
+# from celery.decorators import periodic_task, task
 from celery.result import states
 from predictapp.models import (
     Security,
@@ -8,7 +10,7 @@ from predict.bulk_backtest import run_bulk_backtest_multithread, run_bulk_backte
 from predict.run import get_indicators, check_short
 from predict.process import preprocess, backtest, get_return
 from predict.technical_indicators import cal_technical_indicators
-from predict.ml.ml_indicator import cal_ml_indicators
+# from predict.ml.ml_indicator import cal_ml_indicators
 from predict.run import read_data_from_feed, read_data_from_file
 from predict.settings import BACKTEST_SET
 from predictapp.models_operation import save_models, query_models
@@ -31,7 +33,7 @@ class BackTestTask(Task):
         log.info('BackTestTask {0!r} success: {1!r}'.format(task_id, exc))
         super(BackTestTask, self).on_success(exc, task_id, args, kwargs)
 
-@task(name='run_backtest_task')
+@app.task(name='run_backtest_task')
 def run_backtest_task(df, commission, ticker):
     log.info(f'run_backtest_task: Run backtest asynchronous {ticker}')
 
@@ -39,8 +41,10 @@ def run_backtest_task(df, commission, ticker):
     preprocess(df)
     # Calculate the technical indicators
     cal_technical_indicators(df)
-    # Calculate machine learning indicators
-    cal_ml_indicators(df)
+
+    # # Calculate machine learning indicators
+    # cal_ml_indicators(df)
+
     # Backtest with all signals and save the daily pnl in a DataFrame.
     indicators, indicator_columns = get_indicators(df)
 
@@ -72,7 +76,7 @@ def run_backtest_task(df, commission, ticker):
 
     return result_summary, result_detail
 
-@task(name='run_bulk_backtest_multithread_task')
+@app.task(name='run_bulk_backtest_multithread_task')
 def run_bulk_backtest_multithread_task(exchanges=[], delete=False, tickers=None):
     log.info('Run bulk backtest multi-threading asynchronous')
     kwargs = {}
@@ -82,7 +86,7 @@ def run_bulk_backtest_multithread_task(exchanges=[], delete=False, tickers=None)
         tickers = Security.objects.filter(**kwargs).values_list('ticker', flat=True)
     run_bulk_backtest_multithread(tickers, delete)
 
-@task(name='run_bulk_backtest_singlethread_task')
+@app.task(name='run_bulk_backtest_singlethread_task')
 def run_bulk_backtest_singlethread_task(exchanges=[], delete=False, tickers=None):
     log.info('Run bulk backtest single-threading asynchronous')
     kwargs = {}
@@ -92,23 +96,7 @@ def run_bulk_backtest_singlethread_task(exchanges=[], delete=False, tickers=None
         tickers = Security.objects.filter(**kwargs).values_list('ticker', flat=True)
     run_bulk_backtest_singlethread(tickers, delete)
 
-# @periodic_task(run_every=(crontab(hour=16, minute=00, day_of_week='1-5')), name="backtest_eod_she")
-# def backtest_eod_she():
-#     run_bulk_backtest_singlethread(['SHE'])
-#
-# @periodic_task(run_every=(crontab(hour=12, minute=00, day_of_week='1-5')), name="backtest_eod_shg")
-# def backtest_eod_shg():
-#     run_bulk_backtest_singlethread(['SHG'])
-#
-# @periodic_task(run_every=(crontab(hour=6, minute=00, day_of_week='1-5')), name="backtest_eod_nasdaq")
-# def backtest_eod_nasdaq():
-#     run_bulk_backtest_singlethread(['NASDAQ'])
-#
-# @periodic_task(run_every=(crontab(hour=23, minute=50, day_of_week='1-5')), name="backtest_eod_nyse")
-# def backtest_eod_nyse():
-#     run_bulk_backtest_singlethread(['NYSE'])
-
-@task(name='get_backtest_task', track_started=True, base=BackTestTask)
+@app.task(name='get_backtest_task', track_started=True, base=BackTestTask)
 def get_backtest_task(ticker, commission=0.0, file=None, period='D'):
     '''
     :param ticker: string
@@ -123,8 +111,10 @@ def get_backtest_task(ticker, commission=0.0, file=None, period='D'):
         preprocess(df)
         # Calculate the technical indicators
         cal_technical_indicators(df)
-        # Calculate machine learning indicators
-        cal_ml_indicators(df)
+
+        # # Calculate machine learning indicators
+        # cal_ml_indicators(df)
+
         # Backtest with all signals and save the daily pnl in a DataFrame.
         indicators, indicator_columns = get_indicators(df)
 
@@ -194,3 +184,19 @@ def get_backtest_task(ticker, commission=0.0, file=None, period='D'):
                 'custom': f'Failed to run backtest for {ticker}'
             })
     return ticker, None, None
+
+# @periodic_task(run_every=(crontab(hour=16, minute=00, day_of_week='1-5')), name="backtest_eod_she")
+# def backtest_eod_she():
+#     run_bulk_backtest_singlethread(['SHE'])
+#
+# @periodic_task(run_every=(crontab(hour=12, minute=00, day_of_week='1-5')), name="backtest_eod_shg")
+# def backtest_eod_shg():
+#     run_bulk_backtest_singlethread(['SHG'])
+#
+# @periodic_task(run_every=(crontab(hour=6, minute=00, day_of_week='1-5')), name="backtest_eod_nasdaq")
+# def backtest_eod_nasdaq():
+#     run_bulk_backtest_singlethread(['NASDAQ'])
+#
+# @periodic_task(run_every=(crontab(hour=23, minute=50, day_of_week='1-5')), name="backtest_eod_nyse")
+# def backtest_eod_nyse():
+#     run_bulk_backtest_singlethread(['NYSE'])

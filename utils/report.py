@@ -11,7 +11,7 @@ import numpy as np
 from web.settings import BASE_DIR, DEBUG
 import os
 import matplotlib.pyplot as plt
-from mpl_finance import candlestick2_ohlc
+from mplfinance.original_flavor import candlestick2_ohlc
 import six
 from django.db.models.query import QuerySet
 from datetime import datetime
