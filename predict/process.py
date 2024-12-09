@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from predict.settings import BACKTEST_INPUT_COLUMNS, BACKTEST_OUTPUT_COLUMNS, BACKTEST_SET, PRICE_COLUMNS
+from predict.settings import BACKTEST_INPUT_COLUMNS, BACKTEST_OUTPUT_COLUMNS, BACKTEST_DAYS, PRICE_COLUMNS
 from utils.settings_index import indexes
 
 
@@ -30,10 +30,9 @@ def preprocess(df):
                 # or invalid(row['volume'])
             df.drop(index, axis=0, inplace=True)
     # As the close price is not the last price, use the next day's open as close price
-    #df = df.rename(columns={'close': 'close_orig'})
     df['close_orig'] = df['close']
     df['close'] = df['open'].shift(-1)
-    df['close'].iloc[-1] = df['close_orig'].iloc[-1]
+    df['close'].iat[-1] = df['close_orig'].iat[-1]
 
     df['hc'] = df['high'] / df['close']
     df['lc'] = df['low'] / df['close']
@@ -169,7 +168,7 @@ def backtest_factors(df, commission, signal_column, profit_factor, loss_factor, 
     df['return'] = df['pnl'].cumsum()
     return df
 
-def backtest(df, commission, signal_column, strategy, can_short=True, ticker='', backtest_set=BACKTEST_SET):
+def backtest(df, commission, signal_column, strategy, can_short=True, ticker='', backtest_days=BACKTEST_DAYS):
     """
     :param df: dataframe
     :param commission: commission to buy/sell 1 share
@@ -182,7 +181,7 @@ def backtest(df, commission, signal_column, strategy, can_short=True, ticker='',
     df['position'] = df[signal_column].shift(1)
     df.iat[0, -1] = 0
     df['position'].astype(int)
-    df_backtest = df.iloc[-backtest_set:][BACKTEST_INPUT_COLUMNS]
+    df_backtest = df.iloc[-backtest_days:][BACKTEST_INPUT_COLUMNS]
     factors = (6, 3)
     step_profit = 0.5
     step_loss = 0.3
@@ -195,16 +194,16 @@ def backtest(df, commission, signal_column, strategy, can_short=True, ticker='',
             # Daily PnL
             backtest_factors(df_backtest, commission, 'position', profit_factor, loss_factor, can_short)
             # The total return for the whole tested duration
-            return_total = round(df_backtest['return'].iloc[-1], 2)
-            # The return rate for last BACKTEST_SET days
-            return_rate = round(float(return_total) / df_backtest['open'].iloc[0] * 100.0, 2)
+            total_return = round(df_backtest['return'].iloc[-1], 2)
+            # The return rate for last BACKTEST_DAYS days
+            return_rate = round(float(total_return) / df_backtest['open'].iloc[0] * 100.0, 2)
             sharpe = 0
             drawdown = 0
             volatility = 0
 
             predict_signal, predict_price, predict_take_profit, predict_stop_loss = predict(df, signal_column, profit_factor, loss_factor)
             # Dataframe columns: BACKTEST_OUTPUT_COLUMNS
-            result.loc[len(result)] = [strategy, commission, profit_factor, loss_factor, return_total, return_rate,
+            result.loc[len(result)] = [strategy, commission, profit_factor, loss_factor, total_return, return_rate,
                                        sharpe, drawdown, volatility, predict_signal, predict_price, predict_take_profit, predict_stop_loss]
             # path = os.path.join(BASE_DIR,  f'documents/zb_{profit_factor}_{loss_factor}.csv')
             # df_backtest.to_csv(path)
@@ -213,15 +212,15 @@ def backtest(df, commission, signal_column, strategy, can_short=True, ticker='',
 
     return result
 
-def get_return(df, backtest_result, can_short, backtest_set=BACKTEST_SET):
+def get_return(df, backtest_result, can_short, backtest_days=BACKTEST_DAYS):
     result = pd.DataFrame()
-    result[PRICE_COLUMNS] = df.iloc[-backtest_set:][PRICE_COLUMNS]
+    result[PRICE_COLUMNS] = df.iloc[-backtest_days:][PRICE_COLUMNS]
     for row in backtest_result.itertuples():
         signal_column = '{0}_signal'.format(row.strategy)
         df['position'] = df[signal_column].shift(1)
         df.iat[0, -1] = 0
         df['position'].astype(int)
-        df_backtest = df.iloc[-backtest_set:][BACKTEST_INPUT_COLUMNS]
+        df_backtest = df.iloc[-backtest_days:][BACKTEST_INPUT_COLUMNS]
         backtest_factors(df_backtest, row.commission, 'position', row.profit_factor, row.loss_factor, can_short)
         result[row.strategy] = df_backtest['return']
     return result

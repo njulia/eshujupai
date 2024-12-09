@@ -1,4 +1,4 @@
-from predict.run import read_data_from_feed
+from predict.dataloader.data_loader import load_historical_data
 from predictapp.models_operation import get_backtest, delete_backtest
 from predictapp.models import (
     Security,
@@ -22,7 +22,7 @@ class CalcVolume(Thread):
     def run(self):
         # print(f'CalVolume: Starting thread {self.threadID}')
         for ticker in self.tickers:
-            df = read_data_from_feed(ticker)
+            df = load_historical_data(ticker)
             if df is None or df.empty:
                 log.error('CalcVolume: Failed to get the EOD data for {0}'.format(ticker))
                 continue
@@ -61,7 +61,7 @@ class BulkBacktest(Thread):
             get_backtest(ticker)
 
             # # Run backtest no matter there is Backtest results of this ticker in the DB
-            # df = read_data_from_feed(ticker)
+            # df = load_historical_data(ticker)
             # if df is None or df.empty:
             #     log.error('BulkBacktest: Failed to get the EOD data for {0}'.format(ticker))
             #     continue

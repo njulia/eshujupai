@@ -18,7 +18,7 @@ PUBLIC_STRATEGY_RANK = 10
 # Show strategies with top _PRIVATE_STRATEGY_RANK return if user has paid
 PRIVATE_STRATEGY_RANK = 20
 # The number of days used to calculate the return, and run the backtest
-BACKTEST_SET = 60
+BACKTEST_DAYS = 60
 # The number of days to get historical data from feed
 FEED_DAYS = 120
 
