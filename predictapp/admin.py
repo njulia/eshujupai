@@ -12,7 +12,7 @@ from .models import (
     BacktestDetail,
 )
 from .models_operation import delete_backtest, import_exchanges, import_securities, import_indexes, get_backtest
-from predictapp.tasks import run_bulk_backtest_multithread_task, run_bulk_backtest_singlethread_task, get_backtest_task
+from predictapp.tasks import run_bulk_backtest_multithread_task, run_bulk_backtest_singlethread_task, get_backtest_task_asyn
 from predict.settings import BACKTEST_SET
 from utils.settings_index import BACKTEST_REPORT_STRATEGY_RANK, BACKTEST_REPORT_SECURITIES
 from utils.report import get_top_securities, get_interactive_chart, get_static_chart

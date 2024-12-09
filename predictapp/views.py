@@ -30,7 +30,7 @@ from predictapp.models import (
 from predictapp.forms import (
     UploadForm,
 )
-from predictapp.tasks import get_backtest_task
+from predictapp.tasks import get_backtest_result, get_backtest_task_asyn
 # from gateway import ib
 
 
@@ -206,8 +206,10 @@ def upload_historical_data(request):
                     uploaded_file_path = form.instance.document.path
 
                 # Run backtest asynchronous
-                job = get_backtest_task.delay(ticker, commission, uploaded_file_path)
+                job = get_backtest_task_asyn.delay(ticker, commission, uploaded_file_path)
                 return HttpResponseRedirect(reverse('upload') + '?job=' + job.id)
+                #res = get_backtest_result(ticker, uploaded_file_path, commission)
+                #print(len(res))
         else:
             form = UploadForm()
         return render(request, 'predictapp/upload_historical_data.html',

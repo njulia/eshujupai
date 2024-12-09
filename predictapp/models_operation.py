@@ -10,7 +10,8 @@ from predictapp.models import (
     BacktestSummary,
     BacktestDetail
 )
-from predict.run import run, read_data_from_file, read_data_from_feed
+from predict.run import run
+from predict.dataloader.data_loader import load_historical_data
 from predict.settings import BACKTEST_SET
 from web.settings import BASE_DIR
 from utils.settings_index import indexes
@@ -106,7 +107,7 @@ def get_backtest(ticker, commission=0.0, file=None, period='D', backtest_set=BAC
         print('Backtest {0} with commission={1} for {2} {3} {4}'.format(ticker, commission, backtest_set, period, 'from '+file if file else ''))
         log.info('Backtest {0} with commission={1} for {2} {3} {4}'.format(ticker, commission, backtest_set, period, 'from '+file if file else ''))
         if file:
-            df = read_data_from_file(file, ticker)
+            df = load_historical_data(file, ticker)
             start_time = df.index[0]
             end_time = df.index[-1]
             backtest_summary, backtest_detail, _, _ = query_models(ticker=ticker, start_time=start_time, end_time=end_time)
@@ -114,7 +115,7 @@ def get_backtest(ticker, commission=0.0, file=None, period='D', backtest_set=BAC
             # backtest_summary, backtest_detail, start_time, end_time = query_models(ticker=ticker, end_time__gte=datetime.now(tz=pytz.UTC).date())
             backtest_summary, backtest_detail, start_time, end_time = query_models(ticker=ticker)
             if backtest_summary.empty or backtest_detail.empty:
-                df = read_data_from_feed(ticker=ticker, period=period)
+                df = load_historical_data(ticker=ticker, period=period)
 
         if (backtest_summary.empty or backtest_detail.empty) and not df.empty:
             # Run backtest and predict
