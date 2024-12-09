@@ -1,5 +1,5 @@
 from web.settings import BASE_DIR
-from predict.run import read_data_from_feed
+from predict.dataloader.data_loader import load_historical_data
 from predictapp.models import Security
 import os
 import numpy as np
@@ -12,7 +12,7 @@ def calc_stats(ticker):
     :return:
     '''
     print(f'----------------{ticker}----------------')
-    df = read_data_from_feed(ticker, days=1000)
+    df = load_historical_data(ticker, days=1000)
 
     # Daily stats
     close_diff = abs(df['close'] - df['open'])
@@ -74,7 +74,7 @@ def zhangting_scanner(exchanges=[], tickers=None):
     for ticker in tickers:
         try:
             print(f'addd-zhangting_scanner: {ticker}')
-            df = read_data_from_feed(ticker, days=1000)
+            df = load_historical_data(ticker, days=1000)
             df['change'] = df['close']/df['open']
             df['zhangting'] = np.where(df['change'] > 1.09, 1, 0)
             df['zhangting_1'] = df['zhangting'].shift(1)
