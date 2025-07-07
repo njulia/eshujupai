@@ -2,7 +2,6 @@ from django.contrib import admin
 # from django.contrib.auth.models import User, Group
 from .models import (
     Upload,
-    UserPayment,
     Strategy,
     Exchange,
     Index,
@@ -50,13 +49,6 @@ class UploadResource(resources.ModelResource):
 
 class UploadAdmin(ImportExportModelAdmin):
     resource_class = UploadResource
-
-class UserPaymentResource(resources.ModelResource):
-    class Meta:
-        model = UserPayment
-
-class UserPaymentAdmin(ImportExportModelAdmin):
-    resource_class = UserPaymentResource
 
 class StrategyResource(resources.ModelResource):
     class Meta:
@@ -490,7 +482,6 @@ class BacktestDetailAdmin(ImportExportModelAdmin):
 # Register your models here.
 # admin.site.register(User, UserAdmin)
 # admin.site.register(Group, UserAdmin)
-admin.site.register(UserPayment, UserPaymentAdmin)
 admin.site.register(Upload, UploadAdmin)
 admin.site.register(Strategy, StrategyAdmin)
 admin.site.register(Exchange, ExchangeAdmin)

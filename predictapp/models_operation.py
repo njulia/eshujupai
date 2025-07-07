@@ -2,7 +2,6 @@ from datetime import datetime
 import pandas as pd
 from predictapp.models import (
     Upload,
-    UserPayment,
     Exchange,
     Index,
     Security,
@@ -280,20 +279,3 @@ def save_models(ticker, commission, start_time, end_time, open_price, close_pric
         backtest_detail = BacktestDetail.objects.create(backtest_condition=backtest_condition,
                                                         detail=result_detail.to_json(orient='columns', date_format='iso'))
         log.info(f'save_models: Created BacktestDetail: {backtest_condition}')
-
-def get_userpayment(user):
-    try:
-        if user.is_authenticated:
-            user_payment = UserPayment.objects.get(user=user)
-            is_paid = user_payment.has_expired()
-            log.info(f'get_userpayment: User is authenticated and paid: {user_payment}')
-            return user_payment, is_paid
-    except:
-        log.info(f'get_userpayment: Failed to get UserPayment information for: {user}')
-    return None, False
-
-def set_userpayment(user):
-    user_payment, created = UserPayment.objects.get_or_create(user=user)
-    user_payment.set_expiry_time()
-    log.info(f'set_userpayment: Set UserPayment: {user_payment}')
-    return user_payment

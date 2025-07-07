@@ -33,48 +33,6 @@ class Upload(models.Model):
         """Returns the url to access a particular instance of MyModelName."""
         return reverse('upload-detail-view', args=[str(self.id)])
 
-class UserPayment(models.Model):
-    '''
-    Check whether the user has paid or not to display different content of backtest results
-    '''
-    user = models.OneToOneField(User, blank=False, null=False, on_delete=models.CASCADE, primary_key=True)
-    payment_time = models.DateTimeField(blank=True)
-    expiry_time = models.DateTimeField(blank=True)
-    is_paid = models.BooleanField(default=False, null=False)
-
-    # Metadata
-    class Meta:
-        ordering = ['expiry_time']
-
-    def __str__(self):
-        """String for representing the MyModelName object (in Admin site etc.)."""
-        return f'{self.user}_{self.payment_time}-{self.expiry_time}_{self.is_paid}'
-
-    def get_absolute_url(self):
-        """Returns the url to access a particular instance of the model."""
-        return reverse('userpayment-detail-view', args=[str(self.pk)])
-
-    # Method
-    def has_expired(self):
-        # now = datetime.utcnow().replace(tzinfo=pytz.UTC)
-        now = datetime.now(tz=timezone.utc)
-        if self.expiry_time < now and self.is_paid:
-            self.is_paid = False
-            log.info(f'{self.user}: Payment expired at {self.expiry_time}. Set is_paid={self.is_paid}')
-        self.save()
-        return self.is_paid
-
-    def set_expiry_time(self):
-        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
-        start_time = now
-        if self.expiry_time > now and self.is_paid:
-            start_time = self.expiry_time
-        self.payment_time = now
-        self.expiry_time = start_time + timedelta(days=30)
-        self.is_paid = True
-        log.info(f'{self.user}: Set payment expiry_time={self.expiry_time}, is_paid={self.is_paid}')
-        self.save()
-
 class Strategy(models.Model):
     '''
     Trading strategy

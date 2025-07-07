@@ -30,9 +30,9 @@ def preprocess(df):
                 # or invalid(row['volume'])
             df.drop(index, axis=0, inplace=True)
     # As the close price is not the last price, use the next day's open as close price
-    df['close_orig'] = df['close']
+    df['adjusted_close'] = df['close']
     df['close'] = df['open'].shift(-1)
-    df['close'].iat[-1] = df['close_orig'].iat[-1]
+    df['close'].iat[-1] = df['adjusted_close'].iat[-1]
 
     df['hc'] = df['high'] / df['close']
     df['lc'] = df['low'] / df['close']

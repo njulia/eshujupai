@@ -8,13 +8,7 @@
 <div class="container-fluid text-center">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        {% if user.is_authenticated %}
-            <p><b>{% blocktrans %}Here shows the last {{public_rank}} strategies by return. If you want to see top {{private_rank}} strategies, please pay{% endblocktrans %}</b></p>
-            {% include 'checkout.html' %}
-        {% else %}
             <p><b>{% blocktrans %}Here shows the last {{public_rank}} strategies by return. If you want to see top {{private_rank}} strategies, please login{% endblocktrans %}</b></p>
-        {% endif %}
-
 
         <p>{% blocktrans with start=start_time|date:'Y-m-d' end=end_time|date:'Y-m-d' %}
             Backtest results for {{ ticker }}. Backtest range: {{ start }} - {{ end}}

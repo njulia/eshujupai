@@ -67,28 +67,6 @@ msgstr ""
 "\n"
 "%(ticker)s的回测结果。回测区间：%(start)s - %(end)s"
 
-#: predictapp/templates/predictapp/backtest_private.html:22
-msgid "Please login"
-msgstr "请登录"
-
-#: predictapp/templates/predictapp/backtest_public.html:12
-#, python-format
-msgid ""
-"Here shows the last %(public_rank)s strategies by return. If you want to see "
-"top %(private_rank)s strategies, please pay"
-msgstr ""
-"此处显示收益后 %(public_rank)s 的策略。如果您希望显示收益前 %(private_rank)s "
-"的策略，请付款"
-
-#: predictapp/templates/predictapp/backtest_public.html:15
-#, python-format
-msgid ""
-"Here shows the last %(public_rank)s strategies by return. If you want to see "
-"top %(private_rank)s strategies, please login"
-msgstr ""
-"此处显示收益后 %(public_rank)s 的策略。如果您希望显示收益前 %(private_rank)s "
-"的策略，请登录并付款"
-
 #: predictapp/templates/predictapp/backtest_report_interactive.html:6
 msgid "Backtest interactive report "
 msgstr "研究报告"
@@ -97,19 +75,6 @@ msgstr "研究报告"
 msgid "Backtest report"
 msgstr "研究报告"
 
-#: predictapp/templates/predictapp/payment.html:5 templates/base.html:127
-msgid "Payment"
-msgstr "充值"
-
-#: predictapp/templates/predictapp/payment.html:11
-#, python-format
-msgid "Your account will be expired at %(expiry)s"
-msgstr "您的账户付款将于 %(expiry)s 过期"
-
-#: predictapp/templates/predictapp/payment.html:13
-msgid "Your account has no valid payment"
-msgstr "您的账户没有有效的付款"
-
 #: predictapp/templates/predictapp/reports.html:6 templates/base.html:129
 msgid "Reports"
 msgstr "研究报告"
@@ -117,26 +82,6 @@ msgstr "研究报告"
 #: predictapp/templates/predictapp/reports.html:38
 msgid "Please consider making a donation to protect and sustain eShuJuPai"
 msgstr "希望得到您的捐赠用以支持我们继续维护eShuJuPai，谢谢"
-
-#: predictapp/templates/predictapp/reports.html:40
-msgid "AliPay Donate"
-msgstr "支付宝捐赠"
-
-#: predictapp/templates/predictapp/reports.html:44
-msgid "AliPay 1 CNY"
-msgstr "支付宝捐赠1元"
-
-#: predictapp/templates/predictapp/reports.html:48
-msgid "AliPay 5 CNY"
-msgstr "支付宝捐赠5元"
-
-#: predictapp/templates/predictapp/reports.html:52
-msgid "AliPay 10 CNY"
-msgstr "支付宝捐赠10元"
-
-#: predictapp/templates/predictapp/reports.html:56
-msgid "WeChat Donate "
-msgstr "微信赞赏"
 
 #: predictapp/templates/predictapp/show_t.html:7
 msgid "Your Task is"
@@ -186,22 +131,6 @@ msgstr "无法显示回测结果"
 #: predictapp/views.py:288
 msgid "Failed to load backtest figure"
 msgstr "无法显示回测图形"
-
-#: predictapp/views_pay.py:73 predictapp/views_pay.py:275
-msgid "Failed to pay"
-msgstr "支付失败"
-
-#: predictapp/views_pay.py:155
-msgid "Failed to proceed Alipay"
-msgstr "无法进行支付宝支付"
-
-#: predictapp/views_pay.py:212
-msgid "Failed to pay."
-msgstr "支付失败"
-
-#: predictapp/views_pay.py:284 predictapp/views_pay.py:293
-msgid "Failed to proceed WeChat Pay"
-msgstr "无法进行微信支付"
 
 #: templates/404.html:9
 #, python-format
@@ -678,45 +607,6 @@ msgstr "消息:"
 #: templates/base.html:178
 msgid " © 2018 eShuJuPai "
 msgstr " © 2018 e数据派 "
-
-#: templates/checkout.html:3
-msgid "Membership for 30 days: $7.99 (discount price)"
-msgstr "30天会员：49.99元 (折扣价格)"
-
-#: templates/checkout.html:9
-msgid "Activate instantly"
-msgstr "即时激活"
-
-#: templates/checkout.html:49
-msgid "Activate after verification"
-msgstr "验证后激活"
-
-#: templates/checkout.html:53 templates/checkout.html:57
-msgid "Alipay"
-msgstr "支付宝"
-
-#: templates/checkout.html:62
-msgid "WeChat Pay"
-msgstr "微信支付"
-
-#: templates/checkout_wechat.html:5 templates/checkout_zhifubao.html:5
-msgid "Membership for 30 days: 49.99 CNY."
-msgstr "30天会员：49.99元"
-
-#: templates/checkout_wechat.html:6 templates/checkout_zhifubao.html:6
-msgid ""
-"We will process your payment as soon as possible. It may take 1 working day. "
-"Your membership will be activated after verification."
-msgstr ""
-"我们会尽快处理您的付款。可能需要1个工作日进行审核。审核成功后会员会被激活。"
-
-#: templates/checkout_wechat.html:7 templates/checkout_zhifubao.html:7
-msgid ""
-"Please add your usename of this website to the note of payment. Otherwise we "
-"cannot link your account with the payment."
-msgstr ""
-"请把您在本网站的用户名添加到付款的备注中。否则我们无法把付款链接到您的网站账"
-"户。"
 
 #: templates/contact.html:7
 msgid "If you have any inquiries or suggestions, please contact us"

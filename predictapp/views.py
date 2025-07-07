@@ -18,7 +18,6 @@ from celery.result import AsyncResult
 from predict.settings import SHOW_COLUMNS, PRICE_COLUMNS, PUBLIC_STRATEGY_RANK, PRIVATE_STRATEGY_RANK, BACKTEST_SET
 from predictapp.models_operation import (
     query_models,
-    get_userpayment,
     delete_backtest,
     import_indexes,
     get_backtest,
@@ -55,7 +54,7 @@ def get_saved_result(request):
     if saved_backtest_summary.empty or saved_backtest_detail.empty:
         saved_backtest_summary, saved_backtest_detail, _, _ = query_models(ticker=ticker)
 
-    _, is_paid = get_userpayment(request.user)
+    is_paid = True
     if is_paid:
         saved_backtest_summary_subset = saved_backtest_summary.iloc[:PRIVATE_STRATEGY_RANK]
         strategies = saved_backtest_summary_subset['strategy'].tolist()
@@ -192,7 +191,7 @@ def upload_historical_data(request):
                         request.session['start_time'] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
                         request.session['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
                         backtest_summary_show = format_backtest_summary(request, backtest_summary)
-                        user_payment, is_paid = get_userpayment(request.user)
+                        is_paid = True
                         if is_paid:
                             return render(request, 'predictapp/backtest_private.html',
                                           {'result': backtest_summary_show.iloc[:PRIVATE_STRATEGY_RANK].to_html(index=False, na_rep=''),

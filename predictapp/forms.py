@@ -1,7 +1,6 @@
 from django import forms
 from predictapp.models import (
     Upload,
-    UserPayment,
     Strategy,
     Index,
     Security,
@@ -25,24 +24,6 @@ class UploadForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super(UploadForm, self).save(commit=False)
-        if commit:
-            instance.save()
-        return instance
-
-class UserPaymentForm(forms.ModelForm):
-    class Meta:
-        model = UserPayment
-        fields = ('user', 'payment_time', 'expiry_time', 'is_paid')
-
-    def __init__(self, *args, **kwargs):
-            self.user = kwargs.pop('user')
-            self.is_paid = kwargs.pop('is_paid')
-            super(UserPaymentForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        instance = super(UserPaymentForm, self).save(commit=False)
-        instance.user = self.user
-        instance.is_paid = self.is_paid
         if commit:
             instance.save()
         return instance

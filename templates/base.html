@@ -123,9 +123,6 @@
         <li><a href="{% url 'upload' %}">{% trans "Backtest & Predict" %}</a></li>
         <li><a href="{% url 'instruction' %}" target="_blank">{% trans "Instruction" %}</a></li>
         <li><a href="{% url 'contact' %}" target="_blank">{% trans "Contact" %}</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'payment' %}" target="_blank">{% trans "Payment" %}</a></li>
-        {% endif %}
         <li><a href="{% url 'reports' %}" target="_blank">{% trans "Reports" %}</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

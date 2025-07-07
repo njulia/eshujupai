@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 's=5t(39-)b9duor&)dg^t&9t(j!ks-e36e6b8=s4(5_z0y^0*0'
+SECRET_KEY = 'xxxxxx'
 
 ## N. califonia shujupai-staging. ssh -i /home/julia/.ssh/shujupai ec2-user@13.56.115.29
 # SERVER_HOST = 'shujupai-staging.qibvns5w92.us-west-1.elasticbeanstalk.com'
@@ -183,23 +183,9 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = 'home'
 
 
-# stripe settings
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_live_QU1qSRwciY9TEcE9Gp98DPtW")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_live_ZBUeg81y2tTCt0uZTot2SXWN")
-# STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_FBdVMu9SqtfIjvS4cVYnISXY")
-# STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_8mA1baNCjkae17YkMoRebHXu")
-STRIPE_PRICE_CNY = 4999
-STRIPE_PRICE_USD = 799
-
-# alipay settings
-ALIPAY_APP_ID_DEBUG = os.environ.get("ALIPAY_APP_ID_DEBUG", "2016091600528115")
-ALIPAY_APP_ID = os.environ.get('ALIPAY_APP_ID', '2018101261665323')
-ALIPAY_PRICE_CNY = 49.99 # 交易金额(单位: 元 保留俩位小数)
-ALIPAY_PRICE_USD = 7.99
-
 # market data - Tiingo
 #shujupai
-TIINGO_API_KEY = os.environ.get('TIINGO_API_KEY', '5e228536db181403bc58620c25418c815fa3ef79')
+TIINGO_API_KEY = os.environ.get('TIINGO_API_KEY', 'xxxxx')
 
 # Celery settings
 CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
@@ -226,8 +212,8 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_MAX_LOOP_INTERVAL = 60 # The maximum number of seconds beat can sleep between checking the schedule is 600s
 
 # # Celery settings - AWS SQS - https://sqs.ap-northeast-1.amazonaws.com/851024113686/edatapai
-# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', 'AKIAIQVIK3T4EEMJLN2Q')
-# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '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')
+# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', 'xxxxx')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', 'xxxxx')
 # CELERY_BROKER_TRANSPORT = 'sqs'
 # CELERY_BROKER_URL = 'sqs://' # 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 # CELERY_BROKER_USER = AWS_ACCESS_KEY_ID
